@@ -1,0 +1,68 @@
+Twitter-to-IRC bridge
+A hacky Ruby script to route Twitter status updates into IRC.
+
+Copyright © Tom Morris 2009-2010.
+<tom@tommorris.org>
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <http://www.gnu.org/licenses/>.
+
+----------
+
+I created this for the LeWeb conference and also used it at the Dev8D 
+conference.
+
+It has the following dependencies:
+- Ruby 1.8.6 (MRI) or higher
+- JRuby 1.4.x or higher
+- pircbot.jar 1.5.0 or higher
+- tweetstream gem
+- GNU Screen or equivalent
+
+To run:
+0. Start a screen session. If you don't know about GNU screen, teach yourself 
+how to use it. You won't regret it.
+
+1. First start server.rb - this is a DRb server. Be careful to run this behind 
+a firewall: it is not secured in any way, and a malicious user could inject
+stuff into the DRb queue.
+
+2. Start chat_j.rb with JRuby (the "_j" gives it away!). Be sure to customise
+it with an IRC nick and channel.
+
+3. Start grabber.rb with RubyMRI. Be sure to insert your own Twitter 
+credentials and choose some keywords for it to track.
+
+grabber.rb does just what it says - it connects to Twitter's firehose (or 
+rather, Twitter's tracking firehose). This is a long-polling HTTP connection 
+that sits and waits for bundles of XML or JSON. The tweetstream uses JSON. 
+grabber.rb attempts to connect to the DRb server and puts a formatted string 
+into the shared queue object. chat_j.rb also connects to the DRb server and 
+posts to IRC - importantly, with a delay.
+
+If you want to add rules - to filter out specific tweets - do it in line 7 of 
+grabber.rb. I've included two: one to filter out retweets (any tweet starting 
+with 'RT') and another to filter out tweets containing the string 'live on 
+uStream'. These are due to a significant amount of spam during LeWeb. We also 
+filtered out bit.ly links for a while. I'm tempted to filter out ow.ly links, 
+which are forged in Satan's very own cgi-bin.
+
+The three scripts can be restarted individually - the one you may need to 
+restart most often is grabber.rb, if the connection to Twitter gets silently 
+dropped or whatever. The nice thing about this is if you kill the grabber 
+process, the queue and chat bot processes are left unharmed. Remember: Ruby 
+(as opposed to JRuby) doesn't handle long-life processes well. During LeWeb, I 
+had this running on my MacBook for two days - I may have restarted the grabber 
+process in the middle of the night. During dev8d, I had this running on my 
+desktop Linux machine for four days with a nightly restart.
+
+Beware: it is a total hack.a
