@@ -19,7 +19,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ----------
 
 I created this for the LeWeb conference and also used it at the Dev8D 
-conference.
+conference, the Science Hack Day and Music Hack Days in London.
 
 It has the following dependencies:
 - Ruby 1.8.6 (MRI) or higher
@@ -30,7 +30,7 @@ It has the following dependencies:
 
 To run:
 0. Start a screen session. If you don't know about GNU screen, teach yourself 
-how to use it. You won't regret it.
+how to use it. You won't regret it. (BSD types can use tmux instead.)
 
 1. First start server.rb - this is a DRb server. Be careful to run this behind 
 a firewall: it is not secured in any way, and a malicious user could inject
@@ -65,4 +65,4 @@ had this running on my MacBook for two days - I may have restarted the grabber
 process in the middle of the night. During dev8d, I had this running on my 
 desktop Linux machine for four days with a nightly restart.
 
-Beware: it is a total hack.a
+Beware: it is a total hack.
